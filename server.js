@@ -7,11 +7,13 @@ import userRoutes from "./routes/user.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
+import getLocalIPAddress from "./utils/getLocalIPAddress.js";
 import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
+const ip = getLocalIPAddress();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -32,5 +34,5 @@ app.use("/api/users", userRoutes);
 
 server.listen(PORT, () => {
     connectToMongoDB();
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on => ${ip}:${PORT}`);
 });

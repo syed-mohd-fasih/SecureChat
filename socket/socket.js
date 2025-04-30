@@ -1,13 +1,21 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import dotenv from "dotenv";
+
+import getLocalIPAddress from "../utils/getLocalIPAddress.js";
 
 const app = express();
+dotenv.config();
+const PORT = process.env.PORT || 5000;
+const ip = getLocalIPAddress();
+
+const origin_url = `http://${ip}:${PORT}`;
 
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://192.168.0.148:8000",
+        origin: origin_url,
         methods: ["GET", "POST"],
         credentials: true,
     },
@@ -37,7 +45,7 @@ io.on("connection", (socket) => {
 
     socket.on("message", (message) => {
         console.log("Message received:", message);
-        io.emit("message", message); // Broadcast the message to all clients
+        io.emit("message", message);
     });
 });
 
